@@ -5,26 +5,36 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.webkit.DownloadManager;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.download.DownloadManager;
 import android.widget.Toast;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity; // بسیار مهم
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity { // حتماً این خط باید باشد
 
-    // ... (بقیه متغیرها و کدهای خودت را اینجا نگه دار) ...
+    private WebView webView;
 
-    // این دقیقاً همان متدی است که در خط ۶۵ خطا می‌داد. 
-    // من آن را کاملاً بازنویسی کردم تا دیگر خطا ندهد.
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        
+        // اینجا کد اصلی WebView شما قرار دارد
+        webView = new WebView(this);
+        setContentView(webView);
+        
+        webView.setWebViewClient(new WebViewClient());
+        webView.getSettings().setJavaScriptEnabled(true);
+        webView.loadUrl("https://www.google.com");
+    }
+
+    // متد اصلاح شده برای دانلودها
     private void openDownloads() {
         try {
-            // استفاده از استاندارد اندروید برای باز کردن دانلودها
             Intent intent = new Intent(DownloadManager.ACTION_VIEW_DOWNLOADS);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
         } catch (Exception e) {
-            // اگر به هر دلیلی نشد، به تنظیمات برود تا برنامه کرش نکند
             try {
                 Intent intent = new Intent(Settings.ACTION_SETTINGS);
                 startActivity(intent);
@@ -34,5 +44,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    // ... (بقیه کدهای کلاس تو) ...
+    // متد کمکی برای نمایش پیام (در صورت نیاز در جاهای دیگر)
+    private void toast(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+
+    // ... بقیه متدها و کدهای خودت را اینجا قرار بده ...
 }
